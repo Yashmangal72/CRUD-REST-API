@@ -1,163 +1,101 @@
 # CRUD REST API
 
-A Spring Boot based CRUD REST API for managing employee records.
+A Spring Boot CRUD REST API for managing employees, built with Spring Data JPA, Hibernate, MySQL, DTOs, validation, exception handling, and layered architecture.
 
-This project was built as part of my Java Full Stack development journey to understand and implement REST API development using layered architecture, DTOs, request validation, exception handling, and HTTP status codes.
+## Overview
 
----
+This project started as an in-memory CRUD application using a `HashMap` and was later migrated to persistent database storage using Spring Data JPA, Hibernate, and MySQL.
 
-## 🚀 Features
+## Architecture
 
-- Create an employee
-- Retrieve all employees
-- Retrieve an employee by ID
-- Update an employee
-- Delete an employee
-- DTO-based request and response handling
-- Request validation using Jakarta Bean Validation
+```text
+Client / Postman
+       |
+       v
+REST Controller
+       |
+       v
+Employee Service
+       |
+       v
+Spring Data JPA Repository
+       |
+       v
+Hibernate ORM
+       |
+       v
+MySQL Database
+```
+
+## Features
+
+- Create, read, update, and delete employees
+- Request/response DTOs
+- Bean validation
 - Global exception handling
-- Custom validation error responses
 - Custom `EmployeeNotFoundException`
-- Automatic employee ID generation
-- Proper HTTP status codes
-- RESTful API design
-- Tested using Postman
+- Spring Data JPA
+- Hibernate ORM
+- MySQL persistence
+- Database-generated employee IDs
+- Layered architecture
+- Environment-variable based database credentials
 
----
+## Tech Stack
 
-## 🛠️ Technologies Used
+- Java
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- Hibernate
+- MySQL
+- Maven
+- Bean Validation
+- Postman
+- Git & GitHub
 
-- **Java**
-- **Spring Boot**
-- **Spring Web**
-- **Maven**
-- **Jakarta Bean Validation**
-- **Postman**
-- **Git & GitHub**
-
----
-
-## 🏗️ Architecture
-
-The application follows a layered architecture:
-
-```text
-                    Client
-                      │
-                      ▼
-              ┌───────────────┐
-              │   Controller  │
-              └───────┬───────┘
-                      │
-                EmployeeRequest
-                      │
-                      ▼
-              ┌───────────────┐
-              │    Service    │
-              └───────┬───────┘
-                      │
-                   Employee
-                      │
-                      ▼
-              ┌───────────────┐
-              │  Repository   │
-              └───────┬───────┘
-                      │
-                      ▼
-                   HashMap
-```
-
-### Response Flow
+## Project Structure
 
 ```text
-HashMap
-   ↓
-Employee
-   ↓
-Service
-   ↓
-EmployeeResponse
-   ↓
-Controller
-   ↓
-JSON Response
+src/
+└── main/
+    ├── java/
+    │   └── com/yash/crud_rest_api/
+    │       ├── controller/
+    │       ├── dto/
+    │       ├── exception/
+    │       ├── model/
+    │       ├── repository/
+    │       └── service/
+    │
+    └── resources/
+        └── application.properties
 ```
 
----
+## API Endpoints
 
-## 📁 Project Structure
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/employees` | Create an employee |
+| GET | `/employees` | Get all employees |
+| GET | `/employees/{id}` | Get employee by ID |
+| PUT | `/employees/{id}` | Update an employee |
+| DELETE | `/employees/{id}` | Delete an employee |
+
+Base URL:
 
 ```text
-CRUD_REST_API
-│
-├── .mvn/
-│   └── wrapper/
-│
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── yash/
-│   │   │           └── crud_rest_api/
-│   │   │               │
-│   │   │               ├── controller/
-│   │   │               │   └── EmployeeController.java
-│   │   │               │
-│   │   │               ├── service/
-│   │   │               │   └── EmployeeService.java
-│   │   │               │
-│   │   │               ├── repository/
-│   │   │               │   └── EmployeeRepository.java
-│   │   │               │
-│   │   │               ├── model/
-│   │   │               │   └── Employee.java
-│   │   │               │
-│   │   │               ├── dto/
-│   │   │               │   ├── EmployeeRequest.java
-│   │   │               │   └── EmployeeResponse.java
-│   │   │               │
-│   │   │               └── exception/
-│   │   │                   ├── EmployeeNotFoundException.java
-│   │   │                   ├── GlobalExceptionHandler.java
-│   │   │                   └── ValidationErrorResponse.java
-│   │   │
-│   │   └── resources/
-│   │
-│   └── test/
-│
-├── .gitignore
-├── pom.xml
-├── mvnw
-├── mvnw.cmd
-└── README.md
+http://localhost:8081
 ```
 
----
+> If your local Spring Boot configuration uses a different port, replace `8081` accordingly.
 
-# 🔗 REST API Endpoints
-
-| HTTP Method | Endpoint | Description | Success Status |
-|---|---|---|---|
-| `POST` | `/employees` | Create a new employee | `201 Created` |
-| `GET` | `/employees` | Retrieve all employees | `200 OK` |
-| `GET` | `/employees/{id}` | Retrieve employee by ID | `200 OK` |
-| `PUT` | `/employees/{id}` | Update an employee | `200 OK` |
-| `DELETE` | `/employees/{id}` | Delete an employee | `204 No Content` |
-
----
-
-# 📌 API Usage
-
-## 1. Create Employee
-
-### Request
+## Create Employee
 
 ```http
 POST /employees
 Content-Type: application/json
 ```
-
-### Request Body
 
 ```json
 {
@@ -168,7 +106,9 @@ Content-Type: application/json
 }
 ```
 
-### Response
+The `id` is not required because it is generated by the database.
+
+Example response:
 
 ```json
 {
@@ -180,23 +120,15 @@ Content-Type: application/json
 }
 ```
 
-Response status:
+Response status: `201 Created`
 
-```text
-201 Created
-```
-
----
-
-## 2. Get All Employees
-
-### Request
+## Get All Employees
 
 ```http
 GET /employees
 ```
 
-### Response
+Example response:
 
 ```json
 [
@@ -206,34 +138,19 @@ GET /employees
     "department": "IT",
     "email": "yash@example.com",
     "salary": 50000.0
-  },
-  {
-    "id": 2,
-    "name": "Rahul",
-    "department": "HR",
-    "email": "rahul@example.com",
-    "salary": 45000.0
   }
 ]
 ```
 
-Response status:
+Response status: `200 OK`
 
-```text
-200 OK
-```
-
----
-
-## 3. Get Employee By ID
-
-### Request
+## Get Employee by ID
 
 ```http
 GET /employees/1
 ```
 
-### Response
+Example response:
 
 ```json
 {
@@ -245,86 +162,60 @@ GET /employees/1
 }
 ```
 
-Response status:
+A missing employee returns `404 Not Found`.
 
-```text
-200 OK
-```
-
----
-
-## 4. Update Employee
-
-### Request
+## Update Employee
 
 ```http
 PUT /employees/1
 Content-Type: application/json
 ```
 
-### Request Body
-
 ```json
 {
   "name": "Yash",
-  "department": "IT",
+  "department": "Engineering",
   "email": "yash@example.com",
   "salary": 60000
 }
 ```
 
-### Response
+Example response:
 
 ```json
 {
   "id": 1,
   "name": "Yash",
-  "department": "IT",
+  "department": "Engineering",
   "email": "yash@example.com",
   "salary": 60000.0
 }
 ```
 
-Response status:
+Response status: `200 OK`
 
-```text
-200 OK
-```
-
----
-
-## 5. Delete Employee
-
-### Request
+## Delete Employee
 
 ```http
 DELETE /employees/1
 ```
 
-Response status:
+Response status: `204 No Content`
 
-```text
-204 No Content
-```
+A missing employee returns `404 Not Found`.
 
-The response body is empty because the employee has been successfully deleted.
+## Validation
 
----
+The employee request is validated before creation or update.
 
-# 🛡️ Validation
+The project validates fields including:
 
-The API validates incoming employee data before processing the request.
+- Name
+- Department
+- Email
+- Salary
 
-### Validation Rules
-
-| Field | Validation |
-|---|---|
-| `name` | Required, 2–50 characters |
-| `department` | Required |
-| `email` | Required and must be a valid email |
-| `salary` | Must be greater than 0 |
-
-### Invalid Request
+Example invalid request:
 
 ```json
 {
@@ -335,7 +226,7 @@ The API validates incoming employee data before processing the request.
 }
 ```
 
-### Response
+Example validation response:
 
 ```json
 {
@@ -344,237 +235,194 @@ The API validates incoming employee data before processing the request.
   "errors": {
     "name": "Name is required",
     "department": "Department is required",
-    "email": "Invalid email",
-    "salary": "Salary must be greater than 0"
+    "salary": "Salary must be greater than 0",
+    "email": "Invalid email"
   }
 }
 ```
 
-Response status:
+## Exception Handling
 
-```text
-400 Bad Request
-```
+The application uses centralized exception handling for errors.
 
----
-
-# ⚠️ Exception Handling
-
-The project uses a global exception handler with `@RestControllerAdvice`.
-
-If an employee doesn't exist:
+For example:
 
 ```http
 GET /employees/999
 ```
 
-the API returns:
+returns `404 Not Found` when the employee does not exist.
+
+## Database Configuration
+
+The application uses MySQL with the database:
 
 ```text
-404 Not Found
+crud_rest_api_db
 ```
 
-with an appropriate error message.
+Create it with:
 
-Example:
+```sql
+CREATE DATABASE crud_rest_api_db;
+```
+
+Hibernate creates/updates the employee table from the JPA entity.
+
+The project currently uses:
+
+```properties
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+## Environment Variables
+
+Database credentials are not stored directly in the repository.
+
+`application.properties` uses:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/crud_rest_api_db
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+Configure these locally:
 
 ```text
-Employee with ID 999 not found
+DB_USERNAME=root
+DB_PASSWORD=your_mysql_password
 ```
 
-This prevents controllers from having to handle the same exception logic repeatedly.
+Never commit your actual database password to GitHub.
 
----
+## Running Locally
 
-# 🔢 Automatic ID Generation
-
-The current repository implementation uses an in-memory `HashMap` and an ID counter to generate employee IDs.
-
-Example:
-
-```text
-First employee  → ID 1
-Second employee → ID 2
-Third employee  → ID 3
-```
-
-When updating an existing employee, the existing ID is preserved.
-
-> Note: This project currently uses an in-memory `HashMap` for learning purposes. Data is not persisted after the application is restarted.
-
----
-
-# ▶️ How to Run
-
-## Prerequisites
-
-Make sure you have:
-
-- Java installed
-- Maven installed (or use the included Maven Wrapper)
-- IntelliJ IDEA or another Java IDE
-- Postman or another API testing tool
-
----
-
-## Clone the Repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/Yashmangal72/CRUD-REST-API.git
-```
-
-Navigate into the project:
-
-```bash
 cd CRUD-REST-API
 ```
 
----
+### 2. Create the database
 
-## Run the Application
+```sql
+CREATE DATABASE crud_rest_api_db;
+```
 
-Using Maven:
+### 3. Configure environment variables
+
+Set:
+
+```text
+DB_USERNAME
+DB_PASSWORD
+```
+
+### 4. Run the application
+
+Windows:
 
 ```bash
-mvn spring-boot:run
+mvnw.cmd spring-boot:run
 ```
 
-Or using the Maven Wrapper on Windows:
+Or run the Spring Boot application from IntelliJ IDEA.
 
-```bash
-.\mvnw spring-boot:run
-```
-
-Alternatively, open the project in IntelliJ IDEA and run:
+### 5. Test
 
 ```text
-CrudRestApiApplication
+http://localhost:8081/employees
 ```
 
-The application will start on:
+## Spring Data JPA Repository
 
-```text
-http://localhost:8080
+The project uses:
+
+```java
+public interface EmployeeRepository
+        extends JpaRepository<Employee, Integer> {
+}
 ```
 
-Use Postman or another API client to test the endpoints.
+Basic CRUD methods such as:
 
----
-
-# 🧪 Testing
-
-The API was tested using **Postman**.
-
-The following scenarios were tested:
-
-```text
-POST /employees
-        ↓
-201 Created
-
-GET /employees
-        ↓
-200 OK
-
-GET /employees/{id}
-        ↓
-200 OK
-
-PUT /employees/{id}
-        ↓
-200 OK
-
-DELETE /employees/{id}
-        ↓
-204 No Content
-
-GET /employees/{invalid-id}
-        ↓
-404 Not Found
-
-POST /employees with invalid data
-        ↓
-400 Bad Request
+```java
+save()
+findAll()
+findById()
+existsById()
+deleteById()
 ```
 
-All CRUD operations and validation scenarios were successfully tested.
+are provided by `JpaRepository`.
 
----
+The application therefore no longer needs to maintain employee data in an in-memory `HashMap`.
 
-# 📚 Concepts Practiced
+## JPA Entity
 
-This project helped reinforce the following concepts:
+The employee model is mapped as a JPA entity:
 
-- REST API design
-- HTTP methods
-- HTTP status codes
-- Spring Boot
-- Spring Web
-- `@RestController`
-- `@RequestMapping`
-- `@GetMapping`
-- `@PostMapping`
-- `@PutMapping`
-- `@DeleteMapping`
-- `@PathVariable`
-- `@RequestBody`
-- `ResponseEntity`
-- Constructor Dependency Injection
-- Service Layer
-- Repository Layer
-- DTO pattern
-- Entity-to-DTO mapping
-- Jakarta Bean Validation
-- `@Valid`
-- `@NotBlank`
-- `@Email`
-- `@Size`
-- `@Positive`
-- Custom exceptions
-- `@ExceptionHandler`
-- `@RestControllerAdvice`
-- Global exception handling
-- Maven
-- Git
-- GitHub
-- Postman API testing
+```java
+@Entity
+public class Employee {
 
----
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-# 🔮 Future Improvements
+    // other fields
+}
+```
 
-The current project intentionally uses an in-memory `HashMap`.
+The database generates the employee ID.
 
-Possible future improvements include:
+## Version History
 
-- Replace `HashMap` with Spring Data JPA
-- Add MySQL database
-- Use `@Entity` and `@Id`
-- Use `@GeneratedValue`
-- Add Spring Data JPA repositories
-- Add pagination and sorting
-- Add search/filtering
-- Add Spring Security
-- Add JWT authentication
-- Add unit and integration tests
-- Add API documentation using Swagger/OpenAPI
-- Dockerize the application
+### v1.0-hashmap-crud
 
----
+Initial completed CRUD REST API milestone.
 
-# 👨‍💻 Author
+- In-memory `HashMap` repository
+- CRUD operations
+- DTO-based request/response handling
+- Validation
+- Exception handling
+- Layered architecture
+
+### v2.0-jpa-mysql
+
+Migrated the application to persistent database storage.
+
+- Added Spring Data JPA
+- Added Hibernate
+- Added MySQL
+- Replaced `HashMap` repository with `JpaRepository`
+- Added database-generated IDs
+- Implemented complete CRUD operations using MySQL
+- Kept DTO, validation, exception handling, and service-layer architecture
+- Added environment-variable based database credentials
+
+## Future Improvements
+
+- Spring Data JPA derived query methods
+- Pagination and sorting
+- Search/filter APIs
+- Transaction management
+- Spring Security
+- JWT authentication
+- Swagger/OpenAPI documentation
+- Unit and integration testing
+- Docker
+- Production database configuration
+
+## Author
 
 **Yash Mangal**
 
-Java Full Stack Development Learner
-
-GitHub:  
-https://github.com/Yashmangal72
-
----
-
-## ⭐ Project Status
-
-**Completed ✅**
-
-This project represents a completed learning milestone in my Java Full Stack development journey, focusing on building REST APIs with Spring Boot, layered architecture, DTOs, validation, exception handling, and API testing.
+GitHub: https://github.com/Yashmangal72
