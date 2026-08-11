@@ -52,12 +52,11 @@ public class EmployeeService {
     }
 
     public EmployeeResponse getEmployee(int id) {
-        Employee employee = repository.findById(id);
+        Employee employee = repository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(
+                        "Employee with ID : " + id + " not found"
+                ));
 
-        if (employee == null) {
-            throw new EmployeeNotFoundException (
-                    "Employee with ID : " + id + " not found");
-        }
         return new EmployeeResponse(
                 employee.getId(),
                 employee.getName(),
@@ -68,13 +67,11 @@ public class EmployeeService {
     }
 
     public EmployeeResponse updateEmployee (int id, EmployeeRequest request){
-        Employee existingEmployee = repository.findById(id);
+        Employee existingEmployee = repository.findById(id)
+                        .orElseThrow(() -> new EmployeeNotFoundException(
+                                "Employee with ID : " + id + " not found"
+                        ));
 
-        if (existingEmployee == null) {
-            throw new EmployeeNotFoundException(
-                    "Employee with ID : " + id + " not found"
-            );
-        }
         existingEmployee.setName(request.getName());
         existingEmployee.setDepartment(request.getDepartment());
         existingEmployee.setEmail(request.getEmail());
