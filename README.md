@@ -85,10 +85,10 @@ src/
 Base URL:
 
 ```text
-http://localhost:8081
+http://localhost:8080
 ```
 
-> If your local Spring Boot configuration uses a different port, replace `8081` accordingly.
+> If your local Spring Boot configuration uses a different port, replace `8080` accordingly.
 
 ## Create Employee
 
@@ -337,7 +337,7 @@ Or run the Spring Boot application from IntelliJ IDEA.
 ### 5. Test
 
 ```text
-http://localhost:8081/employees
+http://localhost:8080/employees
 ```
 
 ## Spring Data JPA Repository
